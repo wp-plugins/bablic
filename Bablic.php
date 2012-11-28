@@ -3,7 +3,7 @@
 Plugin Name: Bablic
 Plugin URI: http://www.bablic.com/docs#wordpress'
 Description: Integrates your site with Bablic localization cloud service.
-Version: 0.1
+Version: 1.0
 Author: Ishai Jaffe
 Author URI: http://www.bablic.com
 License: GPLv3
@@ -172,7 +172,7 @@ class bablic {
 	// core snippet
 	$core = sprintf( '<script src="//api.bablic.com/js/lib/jquery.js" type="text/javascript"></script>
 					<script type="text/javascript">
-						document.body.style.visibility="hidden";var bablic=bablic||{};(function(){bablic._pl=[];var e=["on","processElement","suppress","__","__n","getLocal","getLink","redirectTo"];for(var t=0;t<e.length;t++)bablic[e[t]]=function(e){return function(){return bablic._pl.push({n:e,a:arguments}),null}}(e[t]);setTimeout(function(){document.body.style.visibility=""},2e3);var n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=("https:"==document.location.protocol?"https://":"http://")+"api.bablic.com/js/bablic.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(n,r)})();
+					    document.body.style.visibility="hidden";var bablic=bablic||{};(function(){var e=document.createElement("div");e.style.backgroundColor="white",e.style.width="100%",e.style.height="100%",e.style.position="absolute",e.style.zIndex=99999999999,e.attributes["data-bablic-exclude"]="true",document.body.insertBefore(e,document.body.childNodes[0]),bablic._pl=[];var t=["on","processElement","setMutationListen","suppress","__","__n","getLocal","getLink","redirectTo","include","exclude"];for(var n=0;n<t.length;n++)bablic[t[n]]=function(e){return function(){return bablic._pl.push({n:e,a:arguments}),null}}(t[n]);bablic.showPage=function(){if(!e)return;bablic.setMutationListen(!1),document.body.style.visibility="",document.body.removeChild(e),e=null,bablic.setMutationListen(!0)},setTimeout(function(){bablic.showPage()},2e3);var r=document.createElement("script");r.type="text/javascript",r.async=!0,r.src=("https:"==document.location.protocol?"https://":"http://")+"api.bablic.com/js/bablic.js";var i=document.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i)})();
 						bablic.Site="%1$s";
 					</script>', $options['site_id']);
 	
