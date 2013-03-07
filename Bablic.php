@@ -170,9 +170,9 @@ class bablic {
 	Settings > Bablic on the Dashboard.', $this->plugin_textdomain ) . $footer;
 	
 	// core snippet
-	$core = sprintf( '<script src="//api.bablic.com/js/lib/jquery.js" type="text/javascript"></script>
+	$core = sprintf( '<script src="//cdn.bablic.com/jquery.js" type="text/javascript"></script>
 					<script type="text/javascript">
-						document.body.style.visibility="hidden";var bablic=bablic||{};(function(){bablic._pl=[];var e=["on","processElement","suppress","__","__n","getLocal","getLink","redirectTo"];for(var t=0;t<e.length;t++)bablic[e[t]]=function(e){return function(){return bablic._pl.push({n:e,a:arguments}),null}}(e[t]);setTimeout(function(){document.body.style.visibility=""},2e3);var n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=("https:"==document.location.protocol?"https://":"http://")+"api.bablic.com/js/bablic.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(n,r)})();
+						document.body.style.visibility="hidden";var bablic=bablic||{};(function(){bablic._pl=[];var e=["on","processElement","suppress","__","__n","getLocal","getLink","redirectTo"];for(var t=0;t<e.length;t++)bablic[e[t]]=function(e){return function(){return bablic._pl.push({n:e,a:arguments}),null}}(e[t]);setTimeout(function(){document.body.style.visibility=""},2e3);var n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=("https:"==document.location.protocol?"https://":"http://")+"cdn.bablic.com/bablic.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(n,r)})();
 						bablic.Site="%1$s";
 					</script>', $options['site_id']);
 	
