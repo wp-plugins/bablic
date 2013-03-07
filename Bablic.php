@@ -3,7 +3,7 @@
 Plugin Name: Bablic
 Plugin URI: http://www.bablic.com/docs#wordpress'
 Description: Integrates your site with Bablic localization cloud service.
-Version: 1.0
+Version: 1.1
 Author: Ishai Jaffe
 Author URI: http://www.bablic.com
 License: GPLv3
@@ -15,6 +15,7 @@ class bablic {
 	var $options_group = 'bablic_option_option';
 	var $options_page = 'bablic';
 	var $plugin_homepage = 'http://www.bablic.com/docs#wordpress';
+	var $bablic_docs = 'http://www.bablic.com/docs';
 	var $plugin_name = 'Bablic';
 	var $plugin_textdomain = 'Bablic';
 
@@ -24,7 +25,8 @@ class bablic {
 		add_filter( 'plugin_row_meta', array( &$this, 'optionsSetPluginMeta' ), 10, 2 ); // add plugin page meta links
 		add_action( 'admin_init', array( &$this, 'optionsInit' ) ); // whitelist options page
 		add_action( 'admin_menu', array( &$this, 'optionsAddPage' ) ); // add link to plugin's settings page in 'settings' menu on admin menu initilization
-		add_action( 'wp_footer', array( &$this, 'getBablicCode' ), 99999 ); 
+
+		add_action( 'wp_head', array( &$this, 'getBablicCode' ));
 		register_activation_hook( __FILE__, array( &$this, 'optionsCompat' ) );
 	}
 
@@ -77,18 +79,35 @@ class bablic {
 	function optionsInit() { 
 		register_setting( $this->options_group, $this->options_name, array( &$this, 'optionsValidate' ) );
 	}
+
+	    function addAdminScripts($hook_suffix){
+            global $my_settings_page;
+
+            wp_enqueue_script(
+                    'bablic-admin',
+                    plugins_url('/admin.js', __FILE__)
+                );
+        }
 	
 	// create and link options page
-	function optionsAddPage() { 
-		add_options_page( $this->plugin_name . ' ' . __( 'Settings', $this->plugin_textdomain ), __( 'Bablic', $this->plugin_textdomain ), 'manage_options', $this->options_page, array( &$this, 'optionsDrawPage' ) );
-	}
+	function optionsAddPage() {
+        global $my_settings_page;
+		$my_settings_page = add_options_page( $this->plugin_name . ' ' . __( 'Settings', $this->plugin_textdomain ), __( 'Bablic', $this->plugin_textdomain ), 'manage_options', $this->options_page, array( &$this, 'optionsDrawPage' ) );
+
+
+        add_action( 'admin_enqueue_scripts',array( &$this, 'addAdminScripts' ));
+ 	}
+
+
+
+
 	
 	// sanitize and validate options input
 	function optionsValidate( $input ) { 
 		$input['activate'] = ( $input['activate'] ? 1 : 0 ); 	// (checkbox) if TRUE then 1, else NULL
 		return $input;
 	}
-	
+
 	// draw a checkbox option
 	function optionsDrawCheckbox( $slug, $label, $style_checked='', $style_unchecked='' ) { 
 		$options = $this->optionsGetOptions();
@@ -107,7 +126,7 @@ class bablic {
 					</label>
 				</th>
 				<td>
-					<input name="<?php echo $this->options_name; ?>[<?php echo $slug; ?>]" type="checkbox" value="1" <?php checked( $options[$slug], 1 ); ?>/>
+					<input id="<?php echo $this->options_name; ?>_<?php echo $slug; ?>"  name="<?php echo $this->options_name; ?>[<?php echo $slug; ?>]" type="checkbox" value="1" <?php checked( $options[$slug], 1 ); ?>/>
 				</td>
 			</tr>
 			
@@ -115,7 +134,8 @@ class bablic {
 	
 	// draw the options page
 	function optionsDrawPage() { ?>
-		<div class="wrap">
+		<div class="wrap" style="background: #fff url(http://www.bablic.com/images/body-bg.png) 0 0 repeat-x;
+                                 padding: 5px;">
 		<div class="icon32" id="icon-options-general"><br /></div>
 			<h2><?php echo $this->plugin_name . __( ' Settings', $this->plugin_textdomain ); ?></h2>
 			<form name="form1" id="form1" method="post" action="options.php">
@@ -124,7 +144,8 @@ class bablic {
 				
 				<!-- Description -->
 				<p style="font-size:0.95em"><?php 
-					printf( __( 'This plugin injects Bablic code snippet into your site. For localization management, access your account in <a href="%1$s">www.bablic.com</a>. If you have any questions, bug reports, or feature suggestions contact us at support@bablic.com.', $this->plugin_textdomain ), $this->plugin_homepage ); ?></p>
+					printf( __( 'Bablic provides cloud localization. Need help getting started? visit <a target="_blank" href="%1$s">bablic documentation</a> or
+					 <a target="_blank" href="http://www.bablic.com/contacts">contact us</a>.', $this->plugin_textdomain ), $this->bablic_docs ); ?></p>
 				<table class="form-table">
 	
 					<?php $this->optionsDrawCheckbox( 'activate', 'Activate', '', 'color:#f00;' ); ?>					 
@@ -132,18 +153,22 @@ class bablic {
 					<tr valign="top"><th scope="row"><label for="<?php echo $this->options_name; ?>[site_id]">
 					<?php _e( 'Bablic Site ID', $this->plugin_textdomain ); ?>: </label></th>
 						<td>
-							<input type="text" name="<?php echo $this->options_name; ?>[site_id]" value="<?php echo $options['site_id']; ?>" style="width:150px;" />
+							<input placeholder="In case you already have a Bablic ID" type="text" id="bablic_item_site_id"  name="<?php echo $this->options_name; ?>[site_id]" value="<?php echo $options['site_id']; ?>" style="width:400px;" />
 							<a href="http://www.bablic.com/console/new"><?php __('Create Site ID', $this->plugin_textdomain) ?></a>
 						</td>
 					</tr>
 					
 				</table>
 				<p class="submit">
-					<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', $this->plugin_textdomain ) ?>" />
-				</p>
-			</form>
-		</div>
-		
+                	<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', $this->plugin_textdomain ) ?>" />
+                </p>
+				<div>
+				<iframe id="bablic_embedded" src=""
+				style="width:100%; height:990px; display:<?php echo $options['activate'] ?'' : 'none'; ?>" />
+				</div>
+		 			</form>
+         		</div>
+
 		<?php
 	}
 	
@@ -152,37 +177,37 @@ class bablic {
 		$options = $this->optionsGetOptions();
 	
 	// header
-	$header = sprintf( 
-		__( '<!-- 
-			Plugin: Bablic
-	Plugin URL: %1$s', $this->plugin_textdomain ), 
-		$this->plugin_name );
-	
+	$header = '<!-- start Bablic -->';
+
 	// footer
-	$footer = '
-	-->';
-	
+	$footer = '<!-- end Bablic -->';
+
 	// code removed for all pages
-	$disabled = $header . __( 'You\'ve chosen to prevent the snippet from being inserted on 
+	$disabled = $header . "\n\n" . __( 'You\'ve chosen to prevent the snippet from being inserted on
 	any page. 
 	
 	You can enable the insertion of the snippet by going to 
-	Settings > Bablic on the Dashboard.', $this->plugin_textdomain ) . $footer;
+	Settings > Bablic on the Dashboard.', $this->plugin_textdomain ) . "\n\n" .  $footer;
 	
 	// core snippet
-	$core = sprintf( '<script src="//api.bablic.com/js/lib/jquery.js" type="text/javascript"></script>
-					<script type="text/javascript">
-					    document.body.style.visibility="hidden";var bablic=bablic||{};(function(){var e=document.createElement("div");e.style.backgroundColor="white",e.style.width="100%",e.style.height="100%",e.style.position="absolute",e.style.zIndex=99999999999,e.attributes["data-bablic-exclude"]="true",document.body.insertBefore(e,document.body.childNodes[0]),bablic._pl=[];var t=["on","processElement","setMutationListen","suppress","__","__n","getLocal","getLink","redirectTo","include","exclude"];for(var n=0;n<t.length;n++)bablic[t[n]]=function(e){return function(){return bablic._pl.push({n:e,a:arguments}),null}}(t[n]);bablic.showPage=function(){if(!e)return;bablic.setMutationListen(!1),document.body.style.visibility="",document.body.removeChild(e),e=null,bablic.setMutationListen(!0)},setTimeout(function(){bablic.showPage()},2e3);var r=document.createElement("script");r.type="text/javascript",r.async=!0,r.src=("https:"==document.location.protocol?"https://":"http://")+"api.bablic.com/js/bablic.js";var i=document.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i)})();
-						bablic.Site="%1$s";
-					</script>', $options['site_id']);
+	$core = sprintf('<meta name="google" value="notranslate" />
+	    <script type="text/javascript">
+	       var bablic=bablic||{};
+	       bablic.Site="%1$s";
+	       </script>
+	       <script type="text/javascript" src="//api.bablic.com/js/bablic.js"></script>
+	       <script>
+	            bablic.exclude("#wpadminbar");
+	       </script>
+	       ', $options['site_id']);
 	
 	// build code
 	if( !$options['activate'] || $options['site_id'] == '' ) 
 		echo $disabled; 
-	elseif( current_user_can( 'manage_options' )) 
+	elseif( is_admin())
 		echo ""; 
 	else
-		echo $header . "\n\n" . $footer . "\n\n" . $core ; 
+		echo $header . "\n\n"  . $core . "\n\n" . $footer ;
 	}
 } // end class
 
