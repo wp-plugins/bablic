@@ -154,7 +154,7 @@ class bablic {
 					<?php _e( 'Bablic Site ID', $this->plugin_textdomain ); ?>: </label></th>
 						<td>
 							<input placeholder="In case you already have a Bablic ID" type="text" id="bablic_item_site_id"  name="<?php echo $this->options_name; ?>[site_id]" value="<?php echo $options['site_id']; ?>" style="width:400px;" />
-							<a href="http://www.bablic.com/console/new"><?php __('Create Site ID', $this->plugin_textdomain) ?></a>
+							<a href="http://www.bablic.com/new"><?php __('Create Site ID', $this->plugin_textdomain) ?></a>
 						</td>
 					</tr>
 					

@@ -1,7 +1,5 @@
 
 
-console.log('admin bablic');
-
 jQuery(function($){
 
     var match = /\bbablic_cb=(.+?)(?:$|#|$)/.exec(window.location.href);
@@ -10,6 +8,8 @@ jQuery(function($){
     }
 
     var $siteId = $('#bablic_item_site_id');
+    if(!$siteId.length)
+        return;
 
     var $activate = $('#bablic_item_activate');
 
