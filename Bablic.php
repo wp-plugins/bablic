@@ -3,7 +3,7 @@
 Plugin Name: Bablic
 Plugin URI: http://www.bablic.com/docs#wordpress'
 Description: Integrates your site with Bablic localization cloud service.
-Version: 1.1
+Version: 1.2
 Author: Ishai Jaffe
 Author URI: http://www.bablic.com
 License: GPLv3
