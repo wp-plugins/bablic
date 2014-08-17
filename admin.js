@@ -2,48 +2,79 @@
 
 jQuery(function($){
 
+
     var match = /\bbablic_cb=(.+?)(?:$|#|$)/.exec(window.location.href);
-    if(match){
-        window.parent.parent.bablicCallback(match[1]);
-    }
+    if(match)
+        return window.parent.parent.bablicCallback(match[1]);
+
+    var HOST = 'https://www.bablic.com';
 
     var $siteId = $('#bablic_item_site_id');
     if(!$siteId.length)
         return;
-
-    var $activate = $('#bablic_item_activate');
-
     var $embedded = $('#bablic_embedded');
 
-    $siteId.change(function(){
-        var value = $(this).val() || '';
-        $embedded.attr('src','http://www.bablic.com/console/' + (value.length!=24 ? 'new' : value) + '?embedded=' + encodeURIComponent(window.location.href));
+    var isLogged = false;
+//    var $activate = $('#bablic_item_activate');
+//    $activate.click(activate).change(activate).change();
+//    function activate() {
+//        $embedded.toggle(this.checked);
+//    }
+//
 
-        if(this.checked && $siteId.val().length == 24 != isActivated)
-            $submit.show();
-        else
-            $submit.hide();
+    $('#bablic_login').click(function(e){
+        e.preventDefault();
+        if(isLogged)
+            return bablic.logout(onBablicLogout);
+
+        bablic.login(onBablicLogin);
+        return false;
     });
 
-    var isActivated = $activate.is(':checked') && $siteId.val().length == 24;
+    bablic.checkLogin(function(isLogged){
+        if(isLogged)
+            onBablicLogin();
+    });
 
-    var $submit = $('p.submit').hide();
+    function onSite(site){
+        $siteId.val(site.id);
+        $embedded.attr('src',HOST + '/console/' + site.id + '?embedded=' + encodeURIComponent(window.location.href)).show();
+    }
+
+    function openAddSite(){
+        var title = $('head title').text();
+        title = title.replace('Bablic Settings ‹ ','');
+        $embedded.attr('src',HOST + '/new?title=' + encodeURIComponent(title) + '&embedded=' + encodeURIComponent(window.location.href)).show();
+    }
+
+    function onBablicLogout(){
+        isLogged = false;
+        $('#bablic_login').text('Login');
+        $embedded.hide();
+    }
+
+    function onBablicLogin(){
+        isLogged = true;
+        $('#bablic_login').text('Logout');
+
+        var siteId = $siteId.val();
+
+        var host = window.location.hostname;
+        bablic.getSite(siteId && siteId.length == 24 ? siteId : host,function(site){
+            if(site){
+                onSite(site);
+                if(!siteId)
+                    jQuery('#form1').submit();
+                return;
+            }
+            openAddSite();
+        });
+
+    }
 
 
-    var activate = function(){
-        if(this.checked)
-            $embedded.show();
-        else
-            $embedded.hide();
-        if((this.checked && $siteId.val().length == 24) != isActivated)
-            $submit.show();
-        else
-            $submit.hide();
-    };
 
-    $siteId.change();
 
-    $activate.click(activate).change(activate);
 
 
 
@@ -53,3 +84,5 @@ function bablicCallback(siteId){
     jQuery('input[name="bablic_item[site_id]"]').val(siteId);
     jQuery('#form1').submit();
 }
+
+//<?php $this->optionsDrawCheckbox( 'activate', 'Activate', '', 'color:#f00;' ); ?>

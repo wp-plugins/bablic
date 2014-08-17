@@ -3,7 +3,7 @@
 Plugin Name: Bablic
 Plugin URI: http://www.bablic.com/docs#wordpress'
 Description: Integrates your site with Bablic localization cloud service.
-Version: 1.2
+Version: 1.3
 Author: Ishai Jaffe
 Author URI: http://www.bablic.com
 License: GPLv3
@@ -14,10 +14,11 @@ class bablic {
 	var $options_name = 'bablic_item';
 	var $options_group = 'bablic_option_option';
 	var $options_page = 'bablic';
-	var $plugin_homepage = 'http://www.bablic.com/docs#wordpress';
-	var $bablic_docs = 'http://www.bablic.com/docs';
+	var $plugin_homepage = 'https://www.bablic.com/docs#wordpress';
+	var $bablic_docs = 'https://www.bablic.com/docs';
 	var $plugin_name = 'Bablic';
 	var $plugin_textdomain = 'Bablic';
+	var $bablic_version = '1.5';
 
 	// constructor
 	function bablic() {
@@ -54,8 +55,7 @@ class bablic {
 	// get default plugin options
 	function optionsGetDefaults() { 
 		$defaults = array( 
-			'site_id' => '', 
-			'activate' => 0
+			'site_id' => ''
 		);
 		return $defaults;
 	}
@@ -83,6 +83,10 @@ class bablic {
 	    function addAdminScripts($hook_suffix){
             global $my_settings_page;
 
+            wp_enqueue_script(
+                    'bablic-admin-sdk',
+                    'https://www.bablic.com/dist/js/sdk.min.js'
+                );
             wp_enqueue_script(
                     'bablic-admin',
                     plugins_url('/admin.js', __FILE__)
@@ -134,8 +138,7 @@ class bablic {
 	
 	// draw the options page
 	function optionsDrawPage() { ?>
-		<div class="wrap" style="background: #fff url(http://www.bablic.com/images/body-bg.png) 0 0 repeat-x;
-                                 padding: 5px;">
+		<div class="wrap" style="background: #fff; padding: 5px;">
 		<div class="icon32" id="icon-options-general"><br /></div>
 			<h2><?php echo $this->plugin_name . __( ' Settings', $this->plugin_textdomain ); ?></h2>
 			<form name="form1" id="form1" method="post" action="options.php">
@@ -148,23 +151,23 @@ class bablic {
 					 <a target="_blank" href="http://www.bablic.com/contacts">contact us</a>.', $this->plugin_textdomain ), $this->bablic_docs ); ?></p>
 				<table class="form-table">
 	
-					<?php $this->optionsDrawCheckbox( 'activate', 'Activate', '', 'color:#f00;' ); ?>					 
+
 	
 					<tr valign="top"><th scope="row"><label for="<?php echo $this->options_name; ?>[site_id]">
-					<?php _e( 'Bablic Site ID', $this->plugin_textdomain ); ?>: </label></th>
+					Connect to bablic: </label></th>
 						<td>
-							<input placeholder="In case you already have a Bablic ID" type="text" id="bablic_item_site_id"  name="<?php echo $this->options_name; ?>[site_id]" value="<?php echo $options['site_id']; ?>" style="width:400px;" />
-							<a href="http://www.bablic.com/new"><?php __('Create Site ID', $this->plugin_textdomain) ?></a>
+							<input placeholder="In case you already have a Bablic ID" type="hidden" id="bablic_item_site_id"  name="<?php echo $this->options_name; ?>[site_id]" value="<?php echo $options['site_id']; ?>" style="width:400px;" />
+							<button id="bablic_login">Login</button>
 						</td>
 					</tr>
 					
 				</table>
-				<p class="submit">
+				<!--p class="submit">
                 	<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', $this->plugin_textdomain ) ?>" />
-                </p>
+                </p-->
 				<div>
 				<iframe id="bablic_embedded" src=""
-				style="width:100%; height:990px; display:<?php echo $options['activate'] ?'' : 'none'; ?>" />
+				style="width:100%; height:990px; display:none" />
 				</div>
 		 			</form>
          		</div>
@@ -184,25 +187,22 @@ class bablic {
 
 	// code removed for all pages
 	$disabled = $header . "\n\n" . __( 'You\'ve chosen to prevent the snippet from being inserted on
-	any page. 
+	any page.
 	
-	You can enable the insertion of the snippet by going to 
+	You can enable the insertion of the snippet by going to
 	Settings > Bablic on the Dashboard.', $this->plugin_textdomain ) . "\n\n" .  $footer;
-	
+
+
 	// core snippet
-	$core = sprintf('<meta name="google" value="notranslate" />
-	    <script type="text/javascript">
-	       var bablic=bablic||{};
-	       bablic.Site="%1$s";
-	       </script>
-	       <script type="text/javascript" src="//api.bablic.com/js/bablic.js"></script>
-	       <script>
-	            bablic.exclude("#wpadminbar");
-	       </script>
-	       ', $options['site_id']);
+	$core = sprintf('
+	   <script type="text/javascript">var bablic=bablic||{};bablic.Site="%1$s",function(a,b){function c(a){return 48>a?a:126-a+48}function d(a){for(var b=[],d=0;d<a.length;d++)b.push(String.fromCharCode(c(a.charCodeAt(d))));return b.join("")}var e=a.createElement("SPAN");e.className="bablic-link",e.setAttribute("bablic-exclude","true"),e.id="bablicLink",e.innerHTML=d("rM F<IHq\"//777.LMLBEK.K?A/\"pWIL;E:I Z<M@;BM:E?@ M@J b?KMBE4M:E?@r/Mp >?7I<IJ L5 rM F<IHq\"//777.LMLBEK.K?A/\"plMLBEKr/Mp. rM F<IHq\"//777.LMLBEK.K?A/\"pZFE; 7IL;E:I FM; LII@ :<M@;BM:IJ M@J B?KMBE4IJr/Mp 9;E@G rM F<IHq\"//777.LMLBEK.K?A/\"plMLBEKr/Mp");var f=!1,g=function(){f||(a.body.appendChild(e),f=!0)};a.addEventListener&&a.addEventListener("DOMContentLoaded",g,!1),b.addEventListener&&b.addEventListener("load",g,!1),a.attachEvent&&a.attachEvent("onreadystatechange",g),b.attachEvent&&b.attachEvent("onload",g),a.body&&g()}(document,window);</script><script type="text/javascript" src="//api.bablic.com/js/bablic.js?v=%2$s"></script>
+       <script>
+            bablic.exclude("#wpadminbar,#wp-admin-bar-my-account");
+       </script>
+	       ', $options['site_id'],$bablic_version);
 	
 	// build code
-	if( !$options['activate'] || $options['site_id'] == '' ) 
+	if( $options['site_id'] == '' )
 		echo $disabled; 
 	elseif( is_admin())
 		echo ""; 
