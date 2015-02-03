@@ -3,7 +3,7 @@
 Plugin Name: Bablic
 Plugin URI: http://www.bablic.com/docs#wordpress'
 Description: Integrates your site with Bablic localization cloud service.
-Version: 1.4
+Version: 1.5
 Author: Ishai Jaffe
 Author URI: http://www.bablic.com
 License: GPLv3
@@ -18,7 +18,7 @@ class bablic {
 	var $bablic_docs = 'https://www.bablic.com/docs';
 	var $plugin_name = 'Bablic';
 	var $plugin_textdomain = 'Bablic';
-	var $bablic_version = '1.5';
+	var $bablic_version = '1.6';
 
 	// constructor
 	function bablic() {
@@ -166,8 +166,12 @@ class bablic {
                 	<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', $this->plugin_textdomain ) ?>" />
                 </p-->
 				<div>
-				<iframe id="bablic_embedded" src=""
-				style="width:100%; height:990px; display:none" />
+				<div id="bablicLoggedIn"
+				style="width:100%; height:400px; display:none" >
+				    <h4 id="bablicConnected" style="display:none;">Bablic is activated on your word-press website.</h4>
+				    <h4 id="createBablicSite"  style="display:none;">Click to connect your website to Bablic</h4>
+				    <button id="editBablic">Bablic editor</button>
+				</div>
 				</div>
 		 			</form>
          		</div>
@@ -186,16 +190,12 @@ class bablic {
 	$footer = '<!-- end Bablic -->';
 
 	// code removed for all pages
-	$disabled = $header . "\n\n" . __( 'You\'ve chosen to prevent the snippet from being inserted on
-	any page.
-	
-	You can enable the insertion of the snippet by going to
-	Settings > Bablic on the Dashboard.', $this->plugin_textdomain ) . "\n\n" .  $footer;
+	$disabled = $header .  $footer;
 
 
 	// core snippet
 	$core = sprintf('
-	   <script type="text/javascript">var bablic=bablic||{};bablic.Site="%1$s",function(a,b){function c(a){return 48>a?a:126-a+48}function d(a){for(var b=[],d=0;d<a.length;d++)b.push(String.fromCharCode(c(a.charCodeAt(d))));return b.join("")}var e=a.createElement("SPAN");e.className="bablic-link",e.setAttribute("bablic-exclude","true"),e.id="bablicLink",e.innerHTML=d("rM F<IHq\"//777.LMLBEK.K?A/\"pWIL;E:I Z<M@;BM:E?@ M@J b?KMBE4M:E?@r/Mp >?7I<IJ L5 rM F<IHq\"//777.LMLBEK.K?A/\"plMLBEKr/Mp. rM F<IHq\"//777.LMLBEK.K?A/\"pZFE; 7IL;E:I FM; LII@ :<M@;BM:IJ M@J B?KMBE4IJr/Mp 9;E@G rM F<IHq\"//777.LMLBEK.K?A/\"plMLBEKr/Mp");var f=!1,g=function(){f||(a.body.appendChild(e),f=!0)};a.addEventListener&&a.addEventListener("DOMContentLoaded",g,!1),b.addEventListener&&b.addEventListener("load",g,!1),a.attachEvent&&a.attachEvent("onreadystatechange",g),b.attachEvent&&b.attachEvent("onload",g),a.body&&g()}(document,window);</script><script type="text/javascript" src="//api.bablic.com/js/bablic.js?v=1.5"></script>
+	   <script type="text/javascript">var bablic=bablic||{};bablic.Site="%1$s",function(a,b){function c(a){return 48>a?a:126-a+48}function d(a){for(var b=[],d=0;d<a.length;d++)b.push(String.fromCharCode(c(a.charCodeAt(d))));return b.join("")}var e=a.createElement("SPAN");e.className="bablic-link",e.setAttribute("bablic-exclude","true"),e.id="bablicLink",e.innerHTML=d("rM F<IHq\"//777.LMLBEK.K?A/\"pWIL;E:I Z<M@;BM:E?@ M@J b?KMBE4M:E?@r/Mp >?7I<IJ L5 rM F<IHq\"//777.LMLBEK.K?A/\"plMLBEKr/Mp. rM F<IHq\"//777.LMLBEK.K?A/\"pZFE; 7IL;E:I FM; LII@ :<M@;BM:IJ M@J B?KMBE4IJr/Mp 9;E@G rM F<IHq\"//777.LMLBEK.K?A/\"plMLBEKr/Mp");var f=!1,g=function(){f||(a.body.appendChild(e),f=!0)};a.addEventListener&&a.addEventListener("DOMContentLoaded",g,!1),b.addEventListener&&b.addEventListener("load",g,!1),a.attachEvent&&a.attachEvent("onreadystatechange",g),b.attachEvent&&b.attachEvent("onload",g),a.body&&g()}(document,window);</script><script type="text/javascript" src="//api.bablic.com/js/bablic.js?v=1.6"></script>
        <script>
             bablic.exclude("#wpadminbar,#wp-admin-bar-my-account");
        </script>
