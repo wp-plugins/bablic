@@ -340,10 +340,10 @@ class bablic {
 		$no_locale = substr($no_locale,1);
 		foreach( $locales as $alt){
 			if($alt != $locale)
-				echo '<link rel="alternate" href="/' . $this->make_locale_url($no_locale,$alt,$is_sub_dir) . '" hreflang="'.$alt.'">';
+				echo '<link rel="alternate" href="/' . $this->make_locale_url($no_locale,$alt,$is_sub_dir) . '" hreflang="'.$alt.'" />';
 		}
 		if($locale != $options['orig'])
-			echo '<link rel="alternate" href="/' . $no_locale . '" hreflang="'.$options['orig'].'">';
+			echo '<link rel="alternate" href="/' . $no_locale . '" hreflang="'.$options['orig'].'" />';
 			
 	// header
 	$header = '<!-- start Bablic -->';
