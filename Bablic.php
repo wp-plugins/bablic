@@ -19,6 +19,7 @@ class bablic {
 	var $plugin_name = 'Bablic';
 	var $plugin_textdomain = 'Bablic';
 	var $bablic_version = '1.6';
+    var $query_var = 'bablic_locale';
 	// constructor
 	function bablic() {
 		$options = $this->optionsGetOptions();
@@ -31,7 +32,7 @@ class bablic {
 		//add_filter('generate_rewrite_rules',array( &$this,'after' ));
 //		add_filter( 'rewrite_rules_array',array( &$this,'bablic_insert_rewrite_rules' ));
         //add_action( 'wp_loaded',array( &$this,'bablic_flush_rules' ));
-        add_filter( 'query_vars',array( &$this,'bablic_insert_query_vars' ));
+        //add_filter( 'query_vars',array( &$this,'bablic_insert_query_vars' ));
 		register_activation_hook( __FILE__, array( &$this, 'optionsCompat' ) );
         register_activation_hook(__FILE__, array(&$this, 'flush_rules'));
         register_deactivation_hook(__FILE__, array(&$this, 'flush_rules'));
@@ -52,8 +53,26 @@ class bablic {
 		add_filter( 'tag_link', array(&$this, 'append_prefix'), 10, 3 );
 		add_filter( 'term_link', array(&$this, 'append_prefix'), 10, 3 );
 		
+		add_filter('locale', array(&$this, 'get_locale'));
 	}
 	
+	function get_locale_from_url($url){
+		$options = $this->optionsGetOptions();	
+		$locales = $options['locales'];
+		$locale_regex = '('.implode('|',$locales).')';
+		$pattern = '/^\\/'.$locale_regex.'\\//';
+		if(preg_match($pattern, $url, $matches))
+			return $matches[1];
+		
+		$pattern = '/(\?|&)'.$this->query_var.'='.$locale_regex.'/';
+		if(preg_match($pattern, $url, $matches))
+			return $matches[2];
+		return $options['orig'];
+	}
+	function get_locale($locale){
+		$url = $_SERVER['REQUEST_URI'];
+		return $this->get_locale_from_url($url);
+	}
 	
 	function after($rules){
 //		print_r('sta');
@@ -69,18 +88,18 @@ class bablic {
 				$url = $prefix . $url;
 			return str_replace('/'.$prefix.$prefix,'/'.$prefix,$url);
 		}
-		if(strpos($url,'locale=') !== false)
+		if(strpos($url,$this->query_var .'=') !== false)
 			return $url;
 		if(strpos($url,'?') !== false)
-			return $url . '&locale=' . $locale;
-		return $url . '?locale=' . $locale;
+			return $url . '&'. $this->query_var .'=' . $locale;
+		return $url . '?'. $this->query_var .'=' . $locale;
 	}
 	
 	function append_prefix( $url){
 		global $wp_rewrite;
 	    $is_sub_dir = ($wp_rewrite->permalink_structure) !== '';
 		$options = $this->optionsGetOptions();	
-	    $locale = get_query_var( 'locale', $options['orig'] );
+	    $locale = $this->get_locale_from_url($_SERVER['REQUEST_URI']);
 		if($locale == $options['orig'])
 			return $url;
 		return $this->make_locale_url($url,$locale,$is_sub_dir);
@@ -97,8 +116,8 @@ class bablic {
 		$options = $this->optionsGetOptions();
 		$locales = $options['locales'];
         $locale_regex = "(" . implode("|",$locales) . ")/";
-        $locale_replace = "&locale=\$matches[1]";
-        $new_rules['^' . $locale_regex . "?$"] = "index.php?locale=\$matches[1]";
+        $locale_replace = "&".$this->query_var."=\$matches[1]";
+        $new_rules['^' . $locale_regex . "?$"] = "index.php?". $this->query_var ."=\$matches[1]";
 
         foreach ($old_rules as $regex => $replace) {
             $save_regex = $regex;
@@ -148,7 +167,7 @@ class bablic {
 	// Adding the id var so that WP recognizes it
     function bablic_insert_query_vars( $vars )
     {
-        array_push($vars, 'locale');
+        array_push($vars, $this->query_var);
         //array_push($vars, 'what');
         return $vars;
     }
@@ -331,19 +350,19 @@ class bablic {
 	    $is_sub_dir = ($wp_rewrite->permalink_structure) !== '';
 		
 		$options = $this->optionsGetOptions();
-	    $locale = get_query_var( 'locale', $options['orig'] );
-		$locales = $options['locales'];
 		$url = $_SERVER['REQUEST_URI'];
+	    $locale = $this->get_locale_from_url($url);
+		$locales = $options['locales'];
 		$locale_regex = "(" . implode("|",$locales) . ")";		
 		$no_locale = preg_replace('/^\/'.$locale_regex.'\//','/',$url);
-		$no_locale = preg_replace('/(\\?|&)locale='.$locale_regex.'/','$1',$no_locale);
+		$no_locale = preg_replace('/(\\?|&)'.$this->query_var.'='.$locale_regex.'/','$1',$no_locale);
 		$no_locale = substr($no_locale,1);
 		foreach( $locales as $alt){
 			if($alt != $locale)
-				echo '<link rel="alternate" href="/' . $this->make_locale_url($no_locale,$alt,$is_sub_dir) . '" hreflang="'.$alt.'" />';
+				echo '<link rel="alternate" href="/' . $this->make_locale_url($no_locale,$alt,$is_sub_dir) . '" hreflang="'.$alt.'">';
 		}
 		if($locale != $options['orig'])
-			echo '<link rel="alternate" href="/' . $no_locale . '" hreflang="'.$options['orig'].'" />';
+			echo '<link rel="alternate" href="/' . $no_locale . '" hreflang="'.$options['orig'].'">';
 			
 	// header
 	$header = '<!-- start Bablic -->';
