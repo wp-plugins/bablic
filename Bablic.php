@@ -99,6 +99,9 @@ class bablic {
 		global $wp_rewrite;
 	    $is_sub_dir = ($wp_rewrite->permalink_structure) !== '';
 		$options = $this->optionsGetOptions();	
+		if($options['dont_permalink'])
+			return $url;
+
 	    $locale = $this->get_locale_from_url($_SERVER['REQUEST_URI']);
 		if($locale == $options['orig'])
 			return $url;
@@ -114,7 +117,10 @@ class bablic {
 		//print_r($old_rules);
         $new_rules = array();
 		$options = $this->optionsGetOptions();
+		if($options['dont_permalink'])
+			return $old_rules;
 		$locales = $options['locales'];
+		
         $locale_regex = "(" . implode("|",$locales) . ")/";
         $locale_replace = "&".$this->query_var."=\$matches[1]";
         $new_rules['^' . $locale_regex . "?$"] = "index.php?". $this->query_var ."=\$matches[1]";
@@ -198,7 +204,8 @@ class bablic {
 		$defaults = array( 
 			'site_id' => '',
 			'locales' => array('en','es','fr','it'),
-			'orig' => 'en'
+			'orig' => 'en',
+			'dont_permalink' => false
 		);
 		return $defaults;
 	}
@@ -337,6 +344,10 @@ class bablic {
 					
 				    <button id="editBablic">Bablic editor</button>
 				</div>
+				<div>
+					<input type="hidden" id="bablic_dont_permalink_hidden" name="<?php echo $this->options_name; ?>[dont_permalink]" value="<?php echo $options['dont_permalink']; ?>" />
+					<label><input type="checkbox" id="bablic_dont_permalink" <?php checked( 1, !$options['dont_permalink'], true ) ?>  > Generate localization urls (Recommended for SEO - for example: /es/ , /fr/about, ..)</label>
+				</div>
 				</div>
 		 			</form>
          		</div>
@@ -347,9 +358,9 @@ class bablic {
 	// 	the Bablic snippet to be inserted
 	function getBablicCode() { 
 		global $wp_rewrite;
-	    $is_sub_dir = ($wp_rewrite->permalink_structure) !== '';
-		
 		$options = $this->optionsGetOptions();
+	    $is_sub_dir = !$options['dont_permalink'] && ($wp_rewrite->permalink_structure) !== '';
+		
 		$url = $_SERVER['REQUEST_URI'];
 	    $locale = $this->get_locale_from_url($url);
 		$locales = $options['locales'];
@@ -380,7 +391,7 @@ class bablic {
        <script>
             bablic.exclude("#wpadminbar,#wp-admin-bar-my-account");
        </script>
-	       ', $options['site_id'],$locale,$is_sub_dir ? 'subdir' : 'querystring');
+	       ', $options['site_id'],$options['dont_permalink'] ? '' : $locale,$is_sub_dir ? 'subdir' : 'querystring');
 	
 	// build code
 	if( $options['site_id'] == '' )

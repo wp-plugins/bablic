@@ -13,12 +13,12 @@ jQuery(function($){
     if(!$siteId.length)
         return;
 
-	var $orig = $('#bablic_item_orig');
-	var $target = $('#bablic_item_locales\\[0\\]');
+    var $orig = $('#bablic_item_orig');
+    var $target = $('#bablic_item_locales\\[0\\]');
     var $loggedInArea = $('#bablicLoggedIn');
     var $bablicConnected = $('#bablicConnected');
     var $bablicCreateSite = $('#createBablicSite');
-
+    var $dontPermalink = $('#bablic_dont_permalink');
     var isLogged = false;
 //    var $activate = $('#bablic_item_activate');
 //    $activate.click(activate).change(activate).change();
@@ -36,44 +36,49 @@ jQuery(function($){
         return false;
     });
 
+
+    $dontPermalink.change(function(e){
+        $('#bablic_dont_permalink_hidden').val($dontPermalink.is(':checked') ? '' : '1');
+        jQuery('#form1').submit();
+    });
     bablic.checkLogin(function(isLogged){
         if(isLogged)
             onBablicLogin();
     });
-	
-	function updateSiteValues(site){
-		var changed = false;
-		if($orig.val() != site.original_locale){
-			$orig.val(site.original_locale);
-			changed = true;
-		}
-		var length = site.locales.length;
-		site.locales.forEach(function(locale,i){
-			var $elm = $('#bablic_item_locales\\[' + i + '\\]');
-			if(!$elm.length)
-				$elm = $target.clone().attr('name',$target.attr('name').replace('[0]','[' + i + ']')).attr('id',$target.attr('id').replace('[0]','[' + i + ']')).insertAfter($target);
-			if($elm.val() != locale.locale)
-				changed = true;
-			$elm.val(locale.locale);
-		});
-		$target.siblings().each(function(){
-			var match = /\[(\d+)\]/.exec($(this).attr('id'));
-			if(!match)
-				return;
-			var i = Number(match[1]);
-			if(i >= length)
-				$(this).remove();
-		});
-		if(changed)
-			jQuery('#form1').submit();
-	}
+
+    function updateSiteValues(site){
+        var changed = false;
+        if($orig.val() != site.original_locale){
+            $orig.val(site.original_locale);
+            changed = true;
+        }
+        var length = site.locales.length;
+        site.locales.forEach(function(locale,i){
+            var $elm = $('#bablic_item_locales\\[' + i + '\\]');
+            if(!$elm.length)
+                $elm = $target.clone().attr('name',$target.attr('name').replace('[0]','[' + i + ']')).attr('id',$target.attr('id').replace('[0]','[' + i + ']')).insertAfter($target);
+            if($elm.val() != locale.locale)
+                changed = true;
+            $elm.val(locale.locale);
+        });
+        $target.siblings().each(function(){
+            var match = /\[(\d+)\]/.exec($(this).attr('id'));
+            if(!match)
+                return;
+            var i = Number(match[1]);
+            if(i >= length)
+                $(this).remove();
+        });
+        if(changed)
+            jQuery('#form1').submit();
+    }
 
     function onSite(site){
         $siteId.val(site.id);
         $loggedInArea.show();
         $bablicConnected.show();
         $bablicCreateSite.hide();
-		updateSiteValues(site);
+        updateSiteValues(site);
         $loggedInArea.find('button').unbind('click').click(function(e){
             e.preventDefault();
             window.open('http://www.bablic.com/editor/' + site.id);
@@ -146,7 +151,7 @@ jQuery(function($){
         bablic.getSite(siteId,function(site){
             if(site)
                 return onSite(site);
-			// clear siteId
+            // clear siteId
             $siteId.val('');
             jQuery('#form1').submit();
         });
