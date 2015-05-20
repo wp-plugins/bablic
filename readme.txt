@@ -1,7 +1,7 @@
 === Bablic Localization ===
 Contributors: ishaijaffe
 Donate link: http://www.bablic.com
-Tags: localization, l10n, i18n, languages, translation
+Tags: localization, l10n, i18n, languages, translation, multilingual, language, wpml, polylang, translate, translations, localisation, localized, multi-lingual, google translate, bing translate, french, spanish, hebrew, german, russian, chinese, arabic, portuguese, RTL, widget, localize, easyling
 Requires at least: 3.0
 Tested up to: 4.2.2
 Stable tag: trunc
@@ -13,9 +13,11 @@ Translate your Wordpress site in minutes using Bablic. Choose from machine or hu
 
 == Description ==
 
-Bablic lets you [translate your Wordpress website](https://www.bablic.com) within minutes. Choose from machine or human translation right from Bablic's editor and then continue by manually editing text, images or even CSS/style in order to make sure your website's look and feel stays consistent in all of the languages you choose to offer.
+Bablic lets you [translate your Wordpress website](https://www.bablic.com) within minutes. Choose from machine or human [__translation__] right from Bablic's editor and then continue by manually editing text, images or even CSS/style in order to make sure your website's look and feel stays consistent in all of the [__languages__] you choose to offer.
 
-Bablic's editor is extremely user-friendly, if you're familiar with the Wordpress interface you won't have any issues using Bablic.
+Bablic's editor is extremely user-friendly, if you're familiar with the Wordpress interface you won't have any issues using Bablic for Wordpress [__localization__].
+
+Literally, the easiest and most efficient way of [__translating Wordpress__] and having a [__multilingual__] Wordpress website, blog or e-commerce shop!
 
 Try it now for free on [Bablic.com](https://www.bablic.com), simply enter your Wordpress website's URL on our [homepage](https://www.bablic.com).
 
@@ -58,19 +60,19 @@ Find our [full FAQ here](https://www.bablic.com/faq).
 
 1. Editing text screenshot
 
-![Editing text screenshot](/assets/EditText.PNG)
+EditText.PNG
 
 2. Replacing images screenshot
 
-![Replacing images screenshot](/assets/replaceImage.PNG)
+replaceImage.PNG
 
 3. Editing css/style screenshot
 
-![Editing css/style screenshot](/assets/editStyle.PNG)
+editStyle.PNG
 
 4. Order professional translation right from the editor
 
-![Order professional translation right from the editor](/assets/TranslatePro.PNG)
+TranslatePro.PNG
 
 
 == Changelog ==

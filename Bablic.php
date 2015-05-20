@@ -54,6 +54,10 @@ class bablic {
 		add_filter( 'term_link', array(&$this, 'append_prefix'), 10, 3 );
 		
 		add_filter('locale', array(&$this, 'get_locale'));
+
+        add_action( 'admin_notices', array(&$this, 'bablic_admin_messages') );
+        add_action('wp_ajax_bablicHideRating',array(&$this, 'bablic_hide_rating'));
+
 	}
 	
 	function get_locale_from_url($url){
@@ -205,13 +209,19 @@ class bablic {
 			'site_id' => '',
 			'locales' => array('en','es','fr','it'),
 			'orig' => 'en',
-			'dont_permalink' => false
+			'dont_permalink' => false,
+			'date' => '',
+			'rated' => 'no'
 		);
 		return $defaults;
 	}
 	
 	function optionsGetOptions() {
 		$options = get_option( $this->options_name, $this->optionsGetDefaults() );
+		if(!$options['date'] || $options['date'] == ''){
+		    $options['date'] = new DateTime('NOW');
+		    update_option($this->options_name, $options);
+		}
 		$defaults = $this->optionsGetDefaults();
 		foreach($defaults as $key => $value){
 			if(!isset($options[$key]))
@@ -219,6 +229,11 @@ class bablic {
 		}
 		return $options;
 	}
+
+	function updateOptions($options){
+	    update_option($this->options_name, $options);
+	}
+
 	
 	// set plugin links
 	function optionsSetPluginMeta( $links, $file ) { 
@@ -359,6 +374,7 @@ class bablic {
 	function getBablicCode() { 
 		global $wp_rewrite;
 		$options = $this->optionsGetOptions();
+		
 	    $is_sub_dir = !$options['dont_permalink'] && ($wp_rewrite->permalink_structure) !== '';
 		
 		$url = $_SERVER['REQUEST_URI'];
@@ -401,6 +417,60 @@ class bablic {
 	else
 		echo $header . "\n\n"  . $core . "\n\n" . $footer ;
 	}
+
+
+
+
+	function bablic_admin_messages() {
+	    $options = $this->optionsGetOptions();
+		//print_r $options;
+	    $install_date = $options['date'];
+        $display_date = date('Y-m-d h:i:s');
+    	$datetime1 = $install_date;
+    	$datetime2 = new DateTime($display_date);
+    	$diff_intrval = round(($datetime2->format('U') - $datetime1->format('U')) / (60*60*24));
+        if($diff_intrval >= 7 && $options['rated'] == 'no') {
+    	 echo '<div class="bablic_fivestar" style="box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);">
+        	<p>Awesome, you\'ve been using <strong>Bablic</strong> for more than 1 week. May we ask you to give it a <strong>5-star</strong> rating on Wordpress?
+            <br><strong>The Bablic Team</strong>
+            <ul>
+            	<li><a href="https://wordpress.org/support/view/plugin-reviews/bablic" class="thankyou" target="_new" title="Ok, you deserved it" style="font-weight:bold;">Ok, you deserved it</a></li>
+                <li><a href="javascript:void(0);" class="bablicHideRating" title="I already did" style="font-weight:bold;">I already did</a></li>
+                <li><a href="javascript:void(0);" class="bablicHideRating" title="No, not good enough" style="font-weight:bold;">No, not good enough</a></li>
+            </ul>
+        </div>
+        <script>
+        jQuery( document ).ready(function( $ ) {
+
+        jQuery(\'.bablicHideRating\').click(function(){
+            var data={\'action\':\'bablicHideRating\'}
+                 jQuery.ajax({
+
+            url: "'.admin_url( 'admin-ajax.php' ).'",
+            type: "post",
+            data: data,
+            dataType: "json",
+            async: !0,
+            success: function(e) {
+			   jQuery(\'.bablic_fivestar\').slideUp(\'slow\');
+            }
+             });
+            })
+
+        });
+        </script>
+        ';
+        }
+    }
+
+
+    function bablic_hide_rating(){
+        $options = $this->optionsGetOptions();
+        $options['rated'] = 'yes';
+        $this->updateOptions($options);
+        echo json_encode(array("success")); exit;
+    }
+
 } // end class
 
 $bablic_instance = new bablic;
