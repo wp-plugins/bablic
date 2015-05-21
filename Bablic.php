@@ -403,7 +403,7 @@ class bablic {
 
 	// core snippet
 	$core = sprintf('
-	   <script type="text/javascript">var bablic=bablic||{};bablic.Site="%1$s";bablic.locale="%2$s",bablic.localeURL="%3$s",function(a,b){function c(a){return 48>a?a:126-a+48}function d(a){for(var b=[],d=0;d<a.length;d++)b.push(String.fromCharCode(c(a.charCodeAt(d))));return b.join("")}var e=a.createElement("SPAN");e.className="bablic-link",e.setAttribute("bablic-exclude","true"),e.id="bablicLink",e.innerHTML=d("rM F<IHq\"//777.LMLBEK.K?A/\"pWIL;E:I Z<M@;BM:E?@ M@J b?KMBE4M:E?@r/Mp >?7I<IJ L5 rM F<IHq\"//777.LMLBEK.K?A/\"plMLBEKr/Mp. rM F<IHq\"//777.LMLBEK.K?A/\"pZFE; 7IL;E:I FM; LII@ :<M@;BM:IJ M@J B?KMBE4IJr/Mp 9;E@G rM F<IHq\"//777.LMLBEK.K?A/\"plMLBEKr/Mp");var f=!1,g=function(){f||(a.body.appendChild(e),f=!0)};a.addEventListener&&a.addEventListener("DOMContentLoaded",g,!1),b.addEventListener&&b.addEventListener("load",g,!1),a.attachEvent&&a.attachEvent("onreadystatechange",g),b.attachEvent&&b.attachEvent("onload",g),a.body&&g()}(document,window);</script><script type="text/javascript" src="//api.bablic.com/js/bablic.js?v=1.6"></script>
+	   <script type="text/javascript">var bablic=bablic||{};bablic.Site="%1$s";bablic.locale="%2$s",bablic.localeURL="%3$s"</script><script type="text/javascript" src="//api.bablic.com/js/bablic.js?v=1.6"></script>
        <script>
             bablic.exclude("#wpadminbar,#wp-admin-bar-my-account");
        </script>
