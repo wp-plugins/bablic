@@ -147,8 +147,8 @@ jQuery(function($){
 
     function onBablicLogout(){
         isLogged = false;
-        $('#bablic_login').text('Login');
-        $loggedInArea.hide();
+        //$('#bablic_login').text('Login');
+        //$loggedInArea.hide();
     }
 
     function onBablicLogin(){

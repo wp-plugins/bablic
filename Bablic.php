@@ -332,7 +332,7 @@ class bablic {
 				
 				<!-- Description -->
 				<p style="font-size:0.95em"><?php 
-				echo $isFirstTime ? __('Bablic makes Wordpress translation easy. Just click START NOW below and enter your website\'s URL in the popup in order to translate it through our user-friendly editor.', $this->plugin_textdomain) :
+				echo $isFirstTime ? __('Bablic makes Wordpress translation easy. Just click START NOW below in order to translate your website through our user-friendly editor.', $this->plugin_textdomain) :
 				__('Have any questions or concerns? Need help? Email <a href="mailto:support@bablic.com">support@bablic.com</a> for free support.'); ?></p>
 				<table class="form-table">
 	
