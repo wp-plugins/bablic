@@ -13,11 +13,11 @@ Translate your Wordpress site in minutes using Bablic. Choose from machine or hu
 
 == Description ==
 
-Bablic lets you [translate your Wordpress website](https://www.bablic.com) within minutes. Choose from machine or human [__translation__] right from Bablic's editor and then continue by manually editing text, images or even CSS/style in order to make sure your website's look and feel stays consistent in all of the [__languages__] you choose to offer.
+Bablic lets you [translate your Wordpress website](https://www.bablic.com) within minutes. Choose from machine or human __translation__ right from Bablic's editor and then continue by manually editing text, images or even CSS/style in order to make sure your website's look and feel stays consistent in all of the __languages__ you choose to offer.
 
-Bablic's editor is extremely user-friendly, if you're familiar with the Wordpress interface you won't have any issues using Bablic for Wordpress [__localization__].
+Bablic's editor is extremely user-friendly, if you're familiar with the Wordpress interface you won't have any issues using Bablic for Wordpress __localization__.
 
-Literally, the easiest and most efficient way of [__translating Wordpress__] and having a [__multilingual__] Wordpress website, blog or e-commerce shop!
+Literally, the easiest and most efficient way of __translating Wordpress__ and having a __multilingual__ Wordpress website, blog or e-commerce shop!
 
 Try it now for free on [Bablic.com](https://www.bablic.com), simply enter your Wordpress website's URL on our [homepage](https://www.bablic.com).
 
@@ -38,8 +38,7 @@ In the search field type "Bablic Localization" and click Search Plugins. Once yo
 
 1. Activate the plugin from the Plugins tab within Wordpress' admin panel
 2. Click on Settings under the Plugins description
-3. Click on Login and enter the details used to sign up on Bablic.com
-4. Click on Editor to access the editor & make translation changes
+3. Click on START NOW and enter the details used to sign up on Bablic.com
 
 = Manual Installation =
 
@@ -49,8 +48,7 @@ The manual installation method is a bit more technical and requires an FTP clien
 2. Upload `Bablic.php` to the `/wp-content/plugins/` directory using an FTP client
 3. Activate the plugin from the Plugins tab within Wordpress' admin panel
 4. Click on Settings under the Plugins description
-5. Click on Login and enter the details used to sign up on Bablic.com
-6. Click on Editor to access the editor & make translation changes
+5. Click on START NOW and enter the details used to sign up on Bablic.com
 
 == Frequently asked questions ==
 

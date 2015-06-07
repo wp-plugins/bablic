@@ -3,7 +3,7 @@
 Plugin Name: Bablic
 Plugin URI: https://www.bablic.com/docs#wordpress'
 Description: Integrates your site with Bablic localization cloud service.
-Version: 1.6
+Version: 1.7
 Author: Ishai Jaffe
 Author URI: https://www.bablic.com
 License: GPLv3
@@ -319,50 +319,50 @@ class bablic {
 	<?php }
 	
 	// draw the options page
-	function optionsDrawPage() { ?>
+	function optionsDrawPage() { 
+		$options = $this->optionsGetOptions();
+		$isFirstTime = $options['site_id'] == '';
+	?>
 		<div class="wrap" style="background: #fff; padding: 5px;">
 		<div class="icon32" id="icon-options-general"><br /></div>
-			<h2><?php echo $this->plugin_name . __( ' Settings', $this->plugin_textdomain ); ?></h2>
+			<h2><?php echo $this->plugin_name; ?></h2>
 			<form name="form1" id="form1" method="post" action="options.php">
 				<?php settings_fields( $this->options_group ); // nonce settings page ?>
 				<?php $options = $this->optionsGetOptions();  //populate $options array from database ?>
 				
 				<!-- Description -->
 				<p style="font-size:0.95em"><?php 
-					printf( __( 'Bablic provides cloud localization. Need help getting started? visit <a target="_blank" href="%1$s">bablic documentation</a> or
-					 <a target="_blank" href="http://www.bablic.com/contacts">contact us</a>.', $this->plugin_textdomain ), $this->bablic_docs ); ?></p>
+				echo $isFirstTime ? __('Bablic makes Wordpress translation easy. Just click START NOW below and enter your website\'s URL in the popup in order to translate it through our user-friendly editor.', $this->plugin_textdomain) :
+				__('Have any questions or concerns? Need help? Email <a href="mailto:support@bablic.com">support@bablic.com</a> for free support.'); ?></p>
 				<table class="form-table">
 	
 
 	
-					<tr valign="top"><th scope="row"><label for="<?php echo $this->options_name; ?>[site_id]">
-					Connect to bablic: </label></th>
+					<tr valign="top">
 						<td>
-							<input placeholder="In case you already have a Bablic ID" type="hidden" id="bablic_item_site_id"  name="<?php echo $this->options_name; ?>[site_id]" value="<?php echo $options['site_id']; ?>" style="width:400px;" />
-							<button id="bablic_login">Login</button>
+						<?php if(!$isFirstTime) { ?>						
+						To make translation changes, visit Bablic's editor by clicking the button below: <br><br>
+						<?php } ?>
+							<input type="hidden" id="bablic_item_site_id"  name="<?php echo $this->options_name; ?>[site_id]" value="<?php echo $options['site_id']; ?>" style="width:400px;" />
+							<button id="bablic_login" class="button button-primary"><?php echo $isFirstTime ? 'START NOW' : 'BABLIC EDITOR' ?></button>
 						</td>
 					</tr>
 					
 				</table>
-				<!--p class="submit">
-                	<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', $this->plugin_textdomain ) ?>" />
-                </p-->
 				<div>
-				<div id="bablicLoggedIn"
-				style="width:100%; height:400px; display:none" >
-				    <h4 id="bablicConnected" style="display:none;">Bablic is activated on your word-press website.</h4>
-				    <h4 id="createBablicSite"  style="display:none;">Click to connect your website to Bablic</h4>
+				<div id="bablicLoggedIn">				    
 					<input type="hidden" id="bablic_item_orig" name="<?php echo $this->options_name; ?>[orig]" value="<?php echo $options['orig']; ?>" />
 					<?php foreach($options['locales'] as $i => $locale): ?>
 						<input type="hidden" id="bablic_item_locales[<?php echo $i; ?>]" name="<?php echo $this->options_name; ?>[locales][<?php echo $i; ?>]" value="<?php echo $locale; ?>" />
 					<?php endforeach; ?>
-					
-				    <button id="editBablic">Bablic editor</button>
 				</div>
+				<?php if(!$isFirstTime) { ?>
 				<div>
+					<h3>Settings</h3>
 					<input type="hidden" id="bablic_dont_permalink_hidden" name="<?php echo $this->options_name; ?>[dont_permalink]" value="<?php echo $options['dont_permalink']; ?>" />
-					<label><input type="checkbox" id="bablic_dont_permalink" <?php checked( 1, !$options['dont_permalink'], true ) ?>  > Generate localization urls (Recommended for SEO - for example: /es/ , /fr/about, ..)</label>
+					<label><input type="checkbox" id="bablic_dont_permalink" <?php checked( 1, !$options['dont_permalink'], true ) ?>  > Generate SEO-friendly localization urls (for example: /es/, /fr/about, ...)</label>
 				</div>
+				<?php } ?>
 				</div>
 		 			</form>
          		</div>
@@ -431,18 +431,14 @@ class bablic {
     	$diff_intrval = round(($datetime2->format('U') - $datetime1->format('U')) / (60*60*24));
         if($diff_intrval >= 7 && $options['rated'] == 'no') {
     	 echo '<div class="bablic_fivestar" style="box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);">
-        	<p>Awesome, you\'ve been using <strong>Bablic</strong> for more than 1 week. May we ask you to give it a <strong>5-star</strong> rating on Wordpress?
-            <br><strong>The Bablic Team</strong>
-            <ul>
-            	<li><a href="https://wordpress.org/support/view/plugin-reviews/bablic" class="thankyou" target="_new" title="Ok, you deserved it" style="font-weight:bold;">Ok, you deserved it</a></li>
-                <li><a href="javascript:void(0);" class="bablicHideRating" title="I already did" style="font-weight:bold;">I already did</a></li>
-                <li><a href="javascript:void(0);" class="bablicHideRating" title="No, not good enough" style="font-weight:bold;">No, not good enough</a></li>
-            </ul>
+        	<p>Love Bablic? Help us by rating it 5? on <a href="https://wordpress.org/support/view/plugin-reviews/bablic" class="thankyou bablicRate" target="_new" title="Ok, you deserved it" style="font-weight:bold;">WordPress.org</a> 
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" class="bablicHideRating" style="font-weight:bold; font-size:9px;">Don\'t show again</a>
+			</p>
         </div>
         <script>
         jQuery( document ).ready(function( $ ) {
 
-        jQuery(\'.bablicHideRating\').click(function(){
+        jQuery(\'.bablicHideRating,.bablicRate\').click(function(){
             var data={\'action\':\'bablicHideRating\'}
                  jQuery.ajax({
 
