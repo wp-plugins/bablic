@@ -384,12 +384,14 @@ class bablic {
 		$no_locale = preg_replace('/^\/'.$locale_regex.'\//','/',$url);
 		$no_locale = preg_replace('/(\\?|&)'.$this->query_var.'='.$locale_regex.'/','$1',$no_locale);
 		$no_locale = substr($no_locale,1);
-		foreach( $locales as $alt){
-			if($alt != $locale)
-				echo '<link rel="alternate" href="/' . $this->make_locale_url($no_locale,$alt,$is_sub_dir) . '" hreflang="'.$alt.'">';
+		if($is_sub_dir) {
+            foreach( $locales as $alt){
+                if($alt != $locale)
+                    echo '<link rel="alternate" href="/' . $this->make_locale_url($no_locale,$alt,$is_sub_dir) . '" hreflang="'.$alt.'">';
+            }
+            if($locale != $options['orig'])
+                echo '<link rel="alternate" href="/' . $no_locale . '" hreflang="'.$options['orig'].'">';
 		}
-		if($locale != $options['orig'])
-			echo '<link rel="alternate" href="/' . $no_locale . '" hreflang="'.$options['orig'].'">';
 			
 	// header
 	$header = '<!-- start Bablic -->';
@@ -407,7 +409,7 @@ class bablic {
        <script>
             bablic.exclude("#wpadminbar,#wp-admin-bar-my-account");
        </script>
-	       ', $options['site_id'],$options['dont_permalink'] ? '' : $locale,$is_sub_dir ? 'subdir' : 'querystring');
+	       ', $options['site_id'],$is_sub_dir ? $locale : '',$is_sub_dir ? 'subdir' : 'querystring');
 	
 	// build code
 	if( $options['site_id'] == '' )
