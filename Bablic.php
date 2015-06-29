@@ -424,41 +424,44 @@ class bablic {
 
 
 	function bablic_admin_messages() {
-	    $options = $this->optionsGetOptions();
-		//print_r $options;
-	    $install_date = $options['date'];
-        $display_date = date('Y-m-d h:i:s');
-    	$datetime1 = $install_date;
-    	$datetime2 = new DateTime($display_date);
-    	$diff_intrval = round(($datetime2->format('U') - $datetime1->format('U')) / (60*60*24));
-        if($diff_intrval >= 7 && $options['rated'] == 'no') {
-    	 echo '<div class="bablic_fivestar" style="box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);">
-        	<p>Love Bablic? Help us by rating it 5? on <a href="https://wordpress.org/support/view/plugin-reviews/bablic" class="thankyou bablicRate" target="_new" title="Ok, you deserved it" style="font-weight:bold;">WordPress.org</a> 
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" class="bablicHideRating" style="font-weight:bold; font-size:9px;">Don\'t show again</a>
-			</p>
-        </div>
-        <script>
-        jQuery( document ).ready(function( $ ) {
+	    try{
+			$options = $this->optionsGetOptions();
+			//print_r $options;
+			$install_date = $options['date'];
+			$display_date = date('Y-m-d h:i:s');
+			$datetime1 = $install_date;
+			$datetime2 = new DateTime($display_date);
+			$diff_intrval = round(($datetime2->format('U') - $datetime1->format('U')) / (60*60*24));
+			if($diff_intrval >= 7 && $options['rated'] == 'no') {
+			 echo '<div class="bablic_fivestar" style="box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);">
+				<p>Love Bablic? Help us by rating it 5? on <a href="https://wordpress.org/support/view/plugin-reviews/bablic" class="thankyou bablicRate" target="_new" title="Ok, you deserved it" style="font-weight:bold;">WordPress.org</a> 
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" class="bablicHideRating" style="font-weight:bold; font-size:9px;">Don\'t show again</a>
+				</p>
+			</div>
+			<script>
+			jQuery( document ).ready(function( $ ) {
 
-        jQuery(\'.bablicHideRating,.bablicRate\').click(function(){
-            var data={\'action\':\'bablicHideRating\'}
-                 jQuery.ajax({
+			jQuery(\'.bablicHideRating,.bablicRate\').click(function(){
+				var data={\'action\':\'bablicHideRating\'}
+					 jQuery.ajax({
 
-            url: "'.admin_url( 'admin-ajax.php' ).'",
-            type: "post",
-            data: data,
-            dataType: "json",
-            async: !0,
-            success: function(e) {
-			   jQuery(\'.bablic_fivestar\').slideUp(\'slow\');
-            }
-             });
-            })
+				url: "'.admin_url( 'admin-ajax.php' ).'",
+				type: "post",
+				data: data,
+				dataType: "json",
+				async: !0,
+				success: function(e) {
+				   jQuery(\'.bablic_fivestar\').slideUp(\'slow\');
+				}
+				 });
+				})
 
-        });
-        </script>
-        ';
-        }
+			});
+			</script>
+			';
+			}
+		}
+		catch (Exception $e) {}
     }
 
 
