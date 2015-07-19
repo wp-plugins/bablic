@@ -209,7 +209,7 @@ class bablic {
 			'site_id' => '',
 			'locales' => array('en','es','fr','it'),
 			'orig' => 'en',
-			'dont_permalink' => false,
+			'dont_permalink' => true,
 			'date' => '',
 			'rated' => 'no'
 		);
@@ -360,7 +360,7 @@ class bablic {
 				<div>
 					<h3>Settings</h3>
 					<input type="hidden" id="bablic_dont_permalink_hidden" name="<?php echo $this->options_name; ?>[dont_permalink]" value="<?php echo $options['dont_permalink']; ?>" />
-					<label><input type="checkbox" id="bablic_dont_permalink" <?php checked( 1, !$options['dont_permalink'], true ) ?>  > Generate SEO-friendly localization urls (for example: /es/, /fr/about, ...)</label>
+					<label><input type="checkbox" id="bablic_dont_permalink" <?php checked( 1, !$options['dont_permalink'], false ) ?>  > Generate SEO-friendly localization urls (for example: /es/, /fr/about, ...)</label>
 				</div>
 				<?php } ?>
 				</div>
