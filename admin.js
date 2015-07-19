@@ -42,7 +42,7 @@ jQuery(function($){
     });
 
 	function openNewSite(){
-		window.open('https://www.bablic.com/?utm_campaign=wp&autoStart=' + encodeURIComponent(location.hostname) + '&embedded=' + encodeURIComponent(window.location.href));
+		window.open('https://www.bablic.com/?utm_source=Wordpress&utm_medium=Plugin&utm_campaign=WPplugin&autoStart=' + encodeURIComponent(location.hostname) + '&embedded=' + encodeURIComponent(window.location.href));
 		var int = setInterval(function(){
 			bablic.getSite(location.hostname,function(site){
 				if(!site)
@@ -55,7 +55,7 @@ jQuery(function($){
 	}
 	
 	function openExistingSite(siteId){
-		window.open('http://www.bablic.com/editor/' + siteId + '?utm_campaign=wp');
+		window.open('http://www.bablic.com/editor/' + siteId + '?utm_source=Wordpress&utm_medium=Plugin&utm_campaign=WPplugin');
 		var int = setInterval(function(){
 			bablic.getSite(siteId,function(site){
 				if(site)
